@@ -2,13 +2,10 @@
 #include <stdlib.h>
 #include <stdint.h>
 
-/* Indices del arreglo de fecha */
-enum { DIA = 0, MES = 1, ANIO = 2 };
-
 /* a) Persona: nombre y fecha de nacimiento [dia, mes, anio] */
 typedef struct {
     char nombre[20];
-    int16_t nacimiento[3];   /* entero signado de exactamente 2 bytes */
+    int16_t nacimiento[3];   /* [0]=dia, [1]=mes, [2]=anio (signado, 2 bytes) */
 } persona_t;
 
 /*
@@ -21,16 +18,16 @@ static int cmp_edad(const void *a, const void *b)
     const persona_t *pb = b;
 
     /* 1) Comparo el anio */
-    if (pa->nacimiento[ANIO] > pb->nacimiento[ANIO]) return -1;  /* a es mas joven */
-    if (pa->nacimiento[ANIO] < pb->nacimiento[ANIO]) return  1;  /* a es mas mayor */
+    if (pa->nacimiento[2] > pb->nacimiento[2]) return -1;  /* a es mas joven */
+    if (pa->nacimiento[2] < pb->nacimiento[2]) return  1;  /* a es mas mayor */
 
     /* 2) Mismo anio: comparo el mes */
-    if (pa->nacimiento[MES] > pb->nacimiento[MES]) return -1;
-    if (pa->nacimiento[MES] < pb->nacimiento[MES]) return  1;
+    if (pa->nacimiento[1] > pb->nacimiento[1]) return -1;
+    if (pa->nacimiento[1] < pb->nacimiento[1]) return  1;
 
     /* 3) Mismo mes: comparo el dia */
-    if (pa->nacimiento[DIA] > pb->nacimiento[DIA]) return -1;
-    if (pa->nacimiento[DIA] < pb->nacimiento[DIA]) return  1;
+    if (pa->nacimiento[0] > pb->nacimiento[0]) return -1;
+    if (pa->nacimiento[0] < pb->nacimiento[0]) return  1;
 
     /* Misma fecha: misma edad */
     return 0;
@@ -61,9 +58,9 @@ int main(void)
 
     for (size_t i = 0; i < len; i++) {
         printf("%-6s %02d/%02d/%04d\n", gente[i].nombre,
-               gente[i].nacimiento[DIA],
-               gente[i].nacimiento[MES],
-               gente[i].nacimiento[ANIO]);
+               gente[i].nacimiento[0],
+               gente[i].nacimiento[1],
+               gente[i].nacimiento[2]);
     }
     return EXIT_SUCCESS;
 }
