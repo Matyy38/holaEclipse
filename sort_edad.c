@@ -13,22 +13,26 @@ typedef struct {
 
 /*
  * Comparador para qsort: del mas joven al mas mayor.
- * Mas joven = nacio DESPUES, asi que va primero la fecha mas grande
- * (orden descendente por anio, luego mes, luego dia).
+ * Mas joven = nacio DESPUES, asi que va primero la fecha mas grande.
  */
 static int cmp_edad(const void *a, const void *b)
 {
     const persona_t *pa = a;
     const persona_t *pb = b;
-    static const int campos[] = { ANIO, MES, DIA };
 
-    for (size_t i = 0; i < sizeof campos / sizeof campos[0]; i++) {
-        int16_t x = pa->nacimiento[campos[i]];
-        int16_t y = pb->nacimiento[campos[i]];
-        if (x != y) {
-            return (x < y) - (x > y);   /* descendente: mayor fecha primero */
-        }
-    }
+    /* 1) Comparo el anio */
+    if (pa->nacimiento[ANIO] > pb->nacimiento[ANIO]) return -1;  /* a es mas joven */
+    if (pa->nacimiento[ANIO] < pb->nacimiento[ANIO]) return  1;  /* a es mas mayor */
+
+    /* 2) Mismo anio: comparo el mes */
+    if (pa->nacimiento[MES] > pb->nacimiento[MES]) return -1;
+    if (pa->nacimiento[MES] < pb->nacimiento[MES]) return  1;
+
+    /* 3) Mismo mes: comparo el dia */
+    if (pa->nacimiento[DIA] > pb->nacimiento[DIA]) return -1;
+    if (pa->nacimiento[DIA] < pb->nacimiento[DIA]) return  1;
+
+    /* Misma fecha: misma edad */
     return 0;
 }
 
