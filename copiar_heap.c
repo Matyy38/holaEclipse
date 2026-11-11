@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
 /*
  * Copia 'tam' bytes apuntados por 'dato' a un bloque nuevo en el heap.
@@ -14,12 +13,19 @@ void *copiar_a_heap(const void *dato, size_t tam)
         return NULL;
     }
 
-    void *copia = malloc(tam);
+    unsigned char *copia = malloc(tam);
     if (copia == NULL) {
         return NULL;
     }
 
-    memcpy(copia, dato, tam);
+    /* void * no se puede desreferenciar ni hacer aritmetica:
+       lo recorro como bytes (unsigned char) */
+    const unsigned char *origen = dato;
+
+    for (size_t i = 0; i < tam; i++) {
+        copia[i] = origen[i];
+    }
+
     return copia;
 }
 
